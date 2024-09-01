@@ -1,9 +1,9 @@
+# Python-specific
 __pycache__/
 *.pyc
 *.pyo
-*.pyd
-.Python
-env/
+.pytest_cache/
+.coverage
+test/
+# Virtual environment
 venv/
-TRANSLATE/
-

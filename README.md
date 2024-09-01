@@ -1,6 +1,4 @@
-## **README.md**
-
-### **Task Manager**
+## **Task Manager**
 
 **Description:**
 

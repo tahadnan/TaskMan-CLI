@@ -1,5 +1,0 @@
-The program have to serve several purposes:
--Create a To-do list
--Store the wanted tasks by the user, that they have to do
--When done the task get transported into a a tasks-done list
--The user can clear both of his lists if he want to do so
