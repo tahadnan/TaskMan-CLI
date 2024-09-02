@@ -26,6 +26,9 @@ This Python project is a simple task manager application that allows users to ad
 
 Contributions are welcome! Please feel free to fork the repository, make changes, and submit a pull request.
 
+**TO DO**
+Implement the class in a python CLI script
+
 **License:**
 
 This project is licensed under the MIT License.
