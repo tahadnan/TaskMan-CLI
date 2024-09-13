@@ -1,4 +1,17 @@
-class TaskManager(list):
+class TaskManager():
+    """
+    TaskManager manages tasks that need to be done and tasks that are already completed.
+
+    Attributes:
+    ----------
+    to_do : list
+        A list of tasks that are yet to be completed.
+        This list tracks the current tasks that the user needs to work on.
+
+    done : list
+        A list of tasks that have been completed.
+        This list tracks tasks that the user has already marked as done.
+    """
     def __init__(self) -> None:
         self.to_do = []
         self.done = []
@@ -84,7 +97,7 @@ class TaskManager(list):
             A string representing the current state of the task manager.
         """
         if option == 'both':
-            return f"Your tasks to do are:\n{self.to_do}\nYour done tasks are:\n {self.done}"
+            return f"Your tasks to do are:\n{self.to_do}\nYour done tasks are:\n{self.done}"
         elif option == 'to-do':
             return f"Your current to do list is:\n{self.to_do}"
         elif option == 'done':
@@ -122,7 +135,7 @@ class TaskManager(list):
         Returns:
             A message indicating whether both lists were reset successfully.
         """
-        if self.to_do and self.done:
+        if self.to_do or self.done:
             self.to_do.clear()
             self.done.clear()
             return "Both lists reseted and cleaned."
