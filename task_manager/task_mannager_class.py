@@ -103,7 +103,7 @@ class TaskManager():
         elif option == 'done':
             return f"Your done tasks are:\n{self.done}"
         else:
-            return f"Invalid option."
+            return "Invalid option."
     def clear_todo_list(self) -> str:
         """
         Clears the to-do list.

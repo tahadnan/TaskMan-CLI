@@ -19,19 +19,20 @@ def main():
                 ║                   TaskManager CLI Commands                   ║
                 ╠══════════════════════════════════════════════════════════════╣
                 ║ add <task1> | <task2> | ...   : Add one or more tasks        ║
-                ║ remove <task>                 : Remove a task                ║
-                ║ mark-as-done | mad <task>     : Mark a task as completed     ║
-                ║ list-both | lb                : Show all tasks               ║
-                ║ list-todo | ltd               : Show pending tasks           ║
-                ║ list-done | ld                : Show completed tasks         ║
-                ║ clear-todo | cltd             : Clear all pending tasks      ║
-                ║ clear-done | cld              : Clear all completed tasks    ║
+                ║ remove <task>                 : Remove a task or tasks       ║
+                ║ mark-as-done / mad            : Mark one or more tasks       ║
+                ║                                 as completed                 ║
+                ║ list-both / lb                : Show all tasks               ║
+                ║ list-todo / ltd               : Show pending tasks           ║
+                ║ list-done / ld                : Show completed tasks         ║
+                ║ clear-todo / cltd             : Clear all pending tasks      ║
+                ║ clear-done / cld              : Clear all completed tasks    ║
                 ║ reset                         : Clear all tasks              ║
                 ║ help                          : Show this help message       ║
                 ║ exit                          : Exit the program             ║
                 ╚══════════════════════════════════════════════════════════════╝
 
-                Note: Use '|' to separate multiple tasks in 'add' command.
+                Note: Use '|' to separate multiple tasks in 'add','remove' or 'mark-as-done / mad'   command.
              """)
     print_welcome_message()
     to_do_list = TaskManager()
@@ -83,7 +84,7 @@ def main():
 
             else:
                 print("Invalid option, try 'help' to get more info on how to use this CLI.")
-        except KeyboardInterrupt:
+        except KeyboardInterrupt and EOFError:
             print("Try exit next time.")
             break
 if __name__ == '__main__':
