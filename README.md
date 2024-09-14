@@ -29,7 +29,6 @@ Contributions are welcome! Please feel free to fork the repository, make changes
 **TO DO**
 
 Make the script more user friendly.
-Make the code cleaner and dump the load of conditional logic.
 
 **License:**
 
