@@ -85,6 +85,14 @@ class TaskManager():
             return f"{', '.join(done_tasks)} marked as done."
         else:
             return "No tasks were marked as done."
+    def _format_task_list(self, tasks, list_type):
+        if not tasks:
+            return f"No {list_type} tasks."
+    
+        formatted_list = f"{list_type.capitalize()} Tasks:\n"
+        for idx, task in enumerate(tasks, 1):
+            formatted_list += f"{idx}. {task}\n"
+        return formatted_list.strip()
 
     def current_state(self,option: str = 'both') -> str:
         """
@@ -97,11 +105,13 @@ class TaskManager():
             A string representing the current state of the task manager.
         """
         if option == 'both':
-            return f"Your tasks to do are:\n{self.to_do}\nYour done tasks are:\n{self.done}"
+            to_do_list = self._format_task_list(self.to_do, "to-do")
+            done_list = self._format_task_list(self.done, "done")
+            return f"{to_do_list}\n\n{done_list}"
         elif option == 'to-do':
-            return f"Your current to do list is:\n{self.to_do}"
+            return self._format_task_list(self.to_do, "to-do")
         elif option == 'done':
-            return f"Your done tasks are:\n{self.done}"
+            return self._format_task_list(self.done, "done")
         else:
             return "Invalid option."
     def clear_todo_list(self) -> str:
