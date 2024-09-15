@@ -2,6 +2,9 @@
   
 [![tahadnan - To-do-list-manager ](https://img.shields.io/static/v1?label=tahadnan&message=To-do-list-manager+&color=blue&logo=github)](https://github.com/tahadnan/To-do-list-manager  "Go to GitHub repo")  
 <img alt='Python' src='https://img.shields.io/badge/CLI-100000?style=for-the-badge&logo=Python&logoColor=4B8BBE&labelColor=FFD43B&color=306998'/>
+
+## **DEMO**
+https://github.com/user-attachments/assets/860b406e-7842-4e17-9627-2a91a112e637
 </div>
 
 ## **Task Manager**
