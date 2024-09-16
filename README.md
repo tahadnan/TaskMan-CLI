@@ -23,7 +23,10 @@ This Python project is a simple task manager application that allows users to ad
 
 **Usage:**
 
-1. **Install dependencies:** Ensure you have Python installed. If using a virtual environment, activate it. (no needed dependencies currently)
+1. **Install dependencies:** Ensure you have Python installed. If using a virtual environment, activate it.
+```
+pip install -r requirement.txt
+```
 2. **Run the application:** Execute the `main.py` file.
 3. **Interact with the task manager:** Follow the on-screen prompts to add, remove, and mark tasks.
 
