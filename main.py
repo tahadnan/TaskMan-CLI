@@ -1,4 +1,4 @@
-from task_manager.task_mannager_class import TaskManager
+from task_manager_tahadnan.task_manager import TaskManager
 import os
 def main():
     def print_welcome_message():

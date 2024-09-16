@@ -7,7 +7,7 @@
 https://github.com/user-attachments/assets/860b406e-7842-4e17-9627-2a91a112e637
 </div>
 
-## **Task Manager**
+## **Task Manager CLI**
 
 **Description:**
 
