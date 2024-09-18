@@ -42,8 +42,7 @@ Contributions are welcome! Please feel free to fork the repository, make changes
 
 **TO DO**
 
-Make the script more user friendly.  
-Add support for Data Persistence.
+Make the CLI more user friendly.  
 
 **License:**
 
