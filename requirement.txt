@@ -3,6 +3,4 @@ packaging==24.1
 pluggy==1.5.0
 pytest==8.3.3
 --extra-index-url https://test.pypi.org/simple/
-ttask-manager == 0.0.2      
-
-
+ttask_manager==0.1.1
