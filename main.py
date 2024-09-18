@@ -46,11 +46,14 @@ def main():
     
     print_welcome_message()
     to_do_list = TaskManager()
+    to_do_list.load_recent_state()
     while True:
         try:
-            command = input("task-manager > ").strip()
-            
-            if command.lower() == 'clear' :
+            command = input("task-manager > ").strip()            
+            if not command:
+                print("Invalid option,the input cannot be blank,try 'help' to get more info on how to use this CLI.")
+
+            elif command.lower() == 'clear' :
                 clear_screen()
                 continue
 
@@ -58,7 +61,12 @@ def main():
                 print_help_message()
 
             elif command.lower() == 'exit':
-                break
+                save = input("Wanna save the current state [Y/n]: ")
+                if save.lower() == 'y' or save.lower() == 'yes':
+                    print(to_do_list.save_current_state())
+                    break
+                else:
+                    break
 
             elif command.lower().startswith('add'):
                 tasks = [task.strip() for task in command[4:].split('|') if task.strip()]
@@ -69,12 +77,8 @@ def main():
                 print(to_do_list.remove_task(*tasks_tobe_removed))
 
             elif command.lower().startswith('mark-as-done') or command.lower().startswith('mad'):
-                if command.lower().startswith('mark-as-done'):
-                    tasks_tobe_mad = [task.strip() for task in command[13:].split('|') if task.strip()]
-                    print(to_do_list.task_done(*tasks_tobe_mad))
-                elif command.lower().startswith('mad'):
-                    tasks_tobe_mad = [task.strip() for task in command[4:].split('|') if task.strip()]
-                    print(to_do_list.task_done(*tasks_tobe_mad))
+                tasks_tobe_mad = [task.strip() for task in command.split(maxsplit=1)[1].split('|') if task.strip()]
+                print(to_do_list.task_done(*tasks_tobe_mad))
 
             elif command.lower().startswith('list-both') or command.lower().startswith('lb'):
                 print(to_do_list.current_state('both'))
@@ -101,7 +105,12 @@ def main():
             continue
         except EOFError:
             print("\nEOF detected. Exiting...")
-            break
+            save = input("Wanna save the current state [Y/n]: ")
+            if save.lower() == 'y' or save.lower() == 'yes':
+                print(to_do_list.save_current_state())
+                break
+            else:
+                break
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
             print("Please try again or type 'help' to see available commands or 'exit' to quit.")
