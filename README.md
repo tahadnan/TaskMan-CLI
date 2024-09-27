@@ -7,7 +7,7 @@
 https://github.com/user-attachments/assets/860b406e-7842-4e17-9627-2a91a112e637
 </div>
 
-## **Task Manager CLI**
+## **Task Manager CLI(TaskMan)**
 
 **Description:**
 
@@ -42,7 +42,7 @@ Contributions are welcome! Please feel free to fork the repository, make changes
 
 **TO DO**
 
-Make the CLI more user friendly.  
+Make the CLI more user friendly with using prompt toolkit(final stages of the project).  
 
 **License:**
 

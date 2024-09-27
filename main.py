@@ -1,41 +1,50 @@
 from ttask_manager.ttask_manager import TaskManager
-import os
+import os       
 def main():
     def print_welcome_message():
         print("""
-                ╔══════════════════════════════════════════════════════════════╗
-                ║                 Welcome to TaskManager CLI!                  ║
-                ║                                                              ║
-                ║  Manage your tasks efficiently with simple commands.         ║
-                ║  Type 'help' to see available commands or 'exit' to quit.    ║
-                ║                                                              ║
-                ║  Let's get productive!                                       ║
-                ╚══════════════════════════════════════════════════════════════╝
-             """)
+        ╔═══════════════════════════════════════════════════════════════════════════╗
+        ║                                                                           ║
+        ║   ████████╗ █████╗ ███████╗██╗  ██╗    ███╗   ███╗ █████╗ ███╗   ██╗      ║
+        ║   ╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝    ████╗ ████║██╔══██╗████╗  ██║      ║
+        ║      ██║   ███████║███████╗█████╔╝     ██╔████╔██║███████║██╔██╗ ██║      ║
+        ║      ██║   ██╔══██║╚════██║██╔═██╗     ██║╚██╔╝██║██╔══██║██║╚██╗██║      ║
+        ║      ██║   ██║  ██║███████║██║  ██╗    ██║ ╚═╝ ██║██║  ██║██║ ╚████║      ║
+        ║      ╚═╝   ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝      ║
+        ║                                                                           ║
+        ║              Welcome to TaskMan - Your Personal Task Manager!             ║
+        ║                                                                           ║
+        ║        Manage your tasks efficiently with simple CLI commands.            ║
+        ║        Type 'help' to see available commands or 'exit' to quit.           ║
+        ║                                                                           ║
+        ║                     Let's boost your productivity!                        ║
+        ╚═══════════════════════════════════════════════════════════════════════════╝
+        """)
 
     def print_help_message():
         print("""
-                ╔══════════════════════════════════════════════════════════════╗
-                ║                   TaskManager CLI Commands                   ║
-                ╠══════════════════════════════════════════════════════════════╣
-                ║ add <task1> | <task2> | ...   : Add one or more tasks        ║
-                ║ remove <task>                 : Remove a task or tasks       ║
-                ║ mark-as-done / mad            : Mark one or more tasks       ║
-                ║                                 as completed                 ║
-                ║ list-both / lb                : Show all tasks               ║
-                ║ list-todo / ltd               : Show pending tasks           ║
-                ║ list-done / ld                : Show completed tasks         ║
-                ║ clear-todo / cltd             : Clear all pending tasks      ║
-                ║ clear-done / cld              : Clear all completed tasks    ║
-                ║ reset                         : Clear all tasks              ║
-                ║ help                          : Show this help message       ║
-                ║ exit                          : Exit the program             ║
-                ║ clear                         : Clear the screen             ║
-                ╚══════════════════════════════════════════════════════════════╝
-
-                Note: Use '|' to separate multiple tasks in 'add','remove' or 'mark-as-done / mad'   command.
+        ╔═══════════════════════════════════════════════════════════════════════════╗
+        ║                         TaskMan CLI Commands                              ║
+        ╠═══════════════════════════════════════════════════════════════════════════╣
+        ║ add <task1> | <task2> | ...   : Add one or more tasks                     ║
+        ║ remove <task1> | <task2> | ...: Remove one or more tasks                  ║
+        ║ mark-as-done / mad <task1>... : Mark one or more tasks as completed       ║
+        ║ list-both / lb                : Show all tasks (to-do and done)           ║
+        ║ list-todo / ltd               : Show pending tasks                        ║
+        ║ list-done / ld                : Show completed tasks                      ║
+        ║ clear-todo / cltd             : Clear all pending tasks                   ║
+        ║ clear-done / cld              : Clear all completed tasks                 ║
+        ║ reset                         : Clear all tasks (both to-do and done)     ║
+        ║ report [name]                 : Generate a report (optional custom name)  ║
+        ║ save                          : Save current state to file                ║
+        ║ help                          : Show this help message                    ║
+        ║ clear                         : Clear the screen                          ║
+        ║ exit                          : Exit the program                          ║
+        ╠═══════════════════════════════════════════════════════════════════════════╣
+        ║ Note: Use '|' to separate multiple tasks in 'add', 'remove', or 'mad'     ║
+        ║       commands. Example: add buy groceries | call mom | finish report     ║
+        ╚═══════════════════════════════════════════════════════════════════════════╝
         """)
-    
     def clear_screen():
         # For Windows
         if os.name == 'nt':
@@ -46,7 +55,9 @@ def main():
     
     print_welcome_message()
     to_do_list = TaskManager()
-    to_do_list.load_recent_state()
+    pyfile_path = os.path.dirname(os.path.realpath(__file__))
+    json_data_file = os.path.join(pyfile_path, 'data.json')
+    print(to_do_list.load_recent_state(json_data_file))
     while True:
         try:
             command = input("task-manager > ").strip()            
@@ -63,10 +74,13 @@ def main():
             elif command.lower() == 'exit':
                 save = input("Wanna save the current state [Y/n]: ")
                 if save.lower() == 'y' or save.lower() == 'yes':
-                    print(to_do_list.save_current_state())
+                    print(to_do_list.save_current_state(json_data_file))
                     break
                 else:
+                    print('Data not saved.')
                     break
+            elif command.lower() == 'save':
+                print(to_do_list.save_current_state(json_data_file))
 
             elif command.lower().startswith('add'):
                 tasks = [task.strip() for task in command[4:].split('|') if task.strip()]
@@ -95,14 +109,27 @@ def main():
             elif command.lower().startswith('clear-done') or command.lower().startswith('cld'):
                 print(to_do_list.clear_done_list())
 
+            elif command.lower().startswith('report'):
+                report_name = command[len('report'):].strip()
+                if report_name and '\n' not in report_name:
+                    print(to_do_list.report(pyfile_path,f"{report_name}.txt"))
+                else:
+                    print(to_do_list.report(pyfile_path))
+
             elif command.lower().startswith('reset'):
                 print(to_do_list.reset())
-
             else:
                 print("Invalid option, try 'help' to get more info on how to use this CLI.")
         except KeyboardInterrupt:
-            print("\nKeyboardInterrupt detected. To exit, please use the 'exit' command.")
-            continue
+            print("\nKeyboardInterrupt detected.Exiting... ")
+            save = input("Wanna save the current state [Y/n]: ")
+            if save.lower() == 'y' or save.lower() == 'yes':
+                print(to_do_list.save_current_state())
+                break
+            else:
+                print('Data not saved.')    
+                break
+            
         except EOFError:
             print("\nEOF detected. Exiting...")
             save = input("Wanna save the current state [Y/n]: ")
@@ -110,6 +137,7 @@ def main():
                 print(to_do_list.save_current_state())
                 break
             else:
+                print('Data not saved.')    
                 break
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
