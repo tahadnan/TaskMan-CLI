@@ -1,8 +1,16 @@
 from ttask_manager.ttask_manager import TaskManager
 import os       
+from prompt_toolkit import prompt, HTML
+from prompt_toolkit import print_formatted_text as print
+from prompt_toolkit.styles import Style
+from prompt_toolkit.shortcuts import confirm
+from prompt_toolkit.completion import WordCompleter
+from prompt_toolkit.key_binding import KeyBindings
+from prompt_toolkit.keys import Keys
+from prompt_toolkit.application import run_in_terminal
 def main():
     def print_welcome_message():
-        print("""
+        print(HTML("""<ansiyellow>
         ╔═══════════════════════════════════════════════════════════════════════════╗
         ║                                                                           ║
         ║   ████████╗ █████╗ ███████╗██╗  ██╗    ███╗   ███╗ █████╗ ███╗   ██╗      ║
@@ -19,7 +27,8 @@ def main():
         ║                                                                           ║
         ║                     Let's boost your productivity!                        ║
         ╚═══════════════════════════════════════════════════════════════════════════╝
-        """)
+        </ansiyellow>
+        """))
 
     def print_help_message():
         print("""
@@ -38,7 +47,7 @@ def main():
         ║ report [name]                 : Generate a report (optional custom name)  ║
         ║ save                          : Save current state to file                ║
         ║ help                          : Show this help message                    ║
-        ║ clear                         : Clear the screen                          ║
+        ║ clear / Ctrl+l                : Clear the screen                          ║
         ║ exit                          : Exit the program                          ║
         ╠═══════════════════════════════════════════════════════════════════════════╣
         ║ Note: Use '|' to separate multiple tasks in 'add', 'remove', or 'mad'     ║
@@ -52,17 +61,36 @@ def main():
         # For Mac and Linux
         else:
             _ = os.system('clear')
-    
+    binding = KeyBindings()
+    @binding.add('c-l')
+    def _(event):
+        clear_screen()
+    def save():
+        save = confirm("Wanna save the current state: ",suffix="[y/N]" )
+        if save:
+            print(to_do_list.save_current_state(json_data_file))
+        else:
+            print('Data not saved.')    
+            event.app.exit()
+    @binding.add('c-x')
+    def _(event):
+        run_in_terminal(save)
+                
     print_welcome_message()
+    completer = WordCompleter(['add','remove','mark-as-done','mad','list-both','lb','list-todo','ltd','list done','ld','clear-todo','cltd','clear-done','cld','reset','report','save','help','clear','exit'], ignore_case=True)
+    stylesheet = Style.from_dict({
+        'positive' : '#4CAF50',
+        'negative' : '#FF3333'
+    })
     to_do_list = TaskManager()
     pyfile_path = os.path.dirname(os.path.realpath(__file__))
     json_data_file = os.path.join(pyfile_path, 'data.json')
     print(to_do_list.load_recent_state(json_data_file))
     while True:
         try:
-            command = input("task-manager > ").strip()            
+            command = prompt(HTML("<b fg='#FFA500'><i>TaskMan > </i></b>"), completer=completer).strip()            
             if not command:
-                print("Invalid option,the input cannot be blank,try 'help' to get more info on how to use this CLI.")
+                print(HTML("<negative>Invalid option,the input cannot be blank,try 'help' to get more info on how to use this CLI.</negative>"), style=stylesheet)
 
             elif command.lower() == 'clear' :
                 clear_screen()
@@ -72,22 +100,23 @@ def main():
                 print_help_message()
 
             elif command.lower() == 'exit':
-                save = input("Wanna save the current state [Y/n]: ")
-                if save.lower() == 'y' or save.lower() == 'yes':
+                save = confirm("Wanna save the current state: ",suffix="[y/N]" )
+                if save:
                     print(to_do_list.save_current_state(json_data_file))
                     break
                 else:
-                    print('Data not saved.')
+                    print('Data not saved.')    
                     break
+                
             elif command.lower() == 'save':
                 print(to_do_list.save_current_state(json_data_file))
 
             elif command.lower().startswith('add'):
-                tasks = [task.strip() for task in command[4:].split('|') if task.strip()]
+                tasks = [task.strip() for task in command.split(maxsplit=1)[1].split('|') if task.strip()]
                 print(to_do_list.add_task(*tasks))
 
             elif command.lower().startswith('remove') :
-                tasks_tobe_removed = [task.strip() for task in command[7:].split('|') if task.strip()]
+                tasks_tobe_removed = [task.strip() for task in command.split(maxsplit=1)[1].split('|') if task.strip()]
                 print(to_do_list.remove_task(*tasks_tobe_removed))
 
             elif command.lower().startswith('mark-as-done') or command.lower().startswith('mad'):
@@ -122,9 +151,9 @@ def main():
                 print("Invalid option, try 'help' to get more info on how to use this CLI.")
         except KeyboardInterrupt:
             print("\nKeyboardInterrupt detected.Exiting... ")
-            save = input("Wanna save the current state [Y/n]: ")
-            if save.lower() == 'y' or save.lower() == 'yes':
-                print(to_do_list.save_current_state())
+            save = confirm("Wanna save the current state: ", suffix="[y/N]")
+            if save:
+                print(to_do_list.save_current_state(json_data_file))
                 break
             else:
                 print('Data not saved.')    
@@ -132,13 +161,14 @@ def main():
             
         except EOFError:
             print("\nEOF detected. Exiting...")
-            save = input("Wanna save the current state [Y/n]: ")
-            if save.lower() == 'y' or save.lower() == 'yes':
-                print(to_do_list.save_current_state())
+            save = confirm("Wanna save the current state: ", suffix="[y/N]")
+            if save:
+                print(to_do_list.save_current_state(json_data_file))
                 break
             else:
                 print('Data not saved.')    
                 break
+
         except Exception as e:
             print(f"An unexpected error occurred: {e}")
             print("Please try again or type 'help' to see available commands or 'exit' to quit.")
