@@ -163,7 +163,7 @@ def main():
             print(HTML(f"<negative>An unexpected error occurred: {e}</negative>"), style=stylesheet)
             print(HTML("<message>Please try again or type 'help' to see available commands or 'exit' to quit.</message>"),style=stylesheet)     
 
-    print(HTML("<ansigreen>Thank you for using TaskManager CLI. Goodbye!</ansigreen>"))
+    print(HTML("<ansigreen>Thank you for using TaskMan CLI. Goodbye!</ansigreen>"))
 
 if __name__ == '__main__':
     main()
