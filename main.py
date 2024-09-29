@@ -8,6 +8,10 @@ from prompt_toolkit.completion import WordCompleter
 from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.keys import Keys
 from prompt_toolkit.application import run_in_terminal
+from prompt_toolkit.history import FileHistory  
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+from prompt_toolkit.lexers import Lexer
+from prompt_toolkit.document import Document
 def main():
     def print_welcome_message():
         print(HTML("""<ansiyellow>
@@ -31,34 +35,35 @@ def main():
         """))
 
     def print_help_message():
-        print("""
+        print(HTML("""<ansiyellow>
         ╔═══════════════════════════════════════════════════════════════════════════╗
         ║                         TaskMan CLI Commands                              ║
         ╠═══════════════════════════════════════════════════════════════════════════╣
-        ║ add <task1> | <task2> | ...   : Add one or more tasks                     ║
-        ║ remove <task1> | <task2> | ...: Remove one or more tasks                  ║
-        ║ mark-as-done / mad <task1>... : Mark one or more tasks as completed       ║
-        ║ list-both / lb                : Show all tasks (to-do and done)           ║
-        ║ list-todo / ltd               : Show pending tasks                        ║
-        ║ list-done / ld                : Show completed tasks                      ║
-        ║ clear-todo / cltd             : Clear all pending tasks                   ║
-        ║ clear-done / cld              : Clear all completed tasks                 ║
-        ║ reset                         : Clear all tasks (both to-do and done)     ║
-        ║ report [name]                 : Generate a report (optional custom name)  ║
-        ║ save                          : Save current state to file                ║
-        ║ help                          : Show this help message                    ║
-        ║ clear / Ctrl+l                : Clear the screen                          ║
-        ║ exit                          : Exit the program                          ║
+        ║ add [task1] | [task2] | ...    : Add one or more tasks                    ║
+        ║ remove [task1] | [task2] | ... : Remove one or more tasks                 ║
+        ║ mark-as-done / mad [task1]...  : Mark one or more tasks as completed      ║
+        ║ list-both / lb                 : Show all tasks (to-do and done)          ║
+        ║ list-todo / ltd                : Show pending tasks                       ║
+        ║ list-done / ld                 : Show completed tasks                     ║
+        ║ clear-todo / cltd              : Clear all pending tasks                  ║
+        ║ clear-done / cld               : Clear all completed tasks                ║
+        ║ reset                          : Clear all tasks (both to-do and done)    ║
+        ║ report [name]                  : Generate a report (optional custom name) ║
+        ║ save                           : Save current state to file               ║
+        ║ help                           : Show this help message                   ║
+        ║ clear / Ctrl+l                 : Clear the screen                         ║
+        ║ exit                           : Exit the program                         ║
         ╠═══════════════════════════════════════════════════════════════════════════╣
         ║ Note: Use '|' to separate multiple tasks in 'add', 'remove', or 'mad'     ║
-        ║       commands. Example: add buy groceries | call mom | finish report     ║
+        ║                                  commands.                                ║
         ╚═══════════════════════════════════════════════════════════════════════════╝
-        """)
+        </ansiyellow>
+        """))
     def clear_screen():
         # For Windows
         if os.name == 'nt':
             _ = os.system('cls')
-        # For Mac and Linux
+        # For Mac and Linux                 
         else:
             _ = os.system('clear')
     binding = KeyBindings()
@@ -66,29 +71,28 @@ def main():
     def _(event):
         clear_screen()
     def save():
-        save = confirm("Wanna save the current state: ",suffix="[y/N]" )
+        save = confirm(HTML("<ansicyan>Wanna save the current state: </ansicyan>"),suffix="[y/N]" )
         if save:
             print(to_do_list.save_current_state(json_data_file))
         else:
             print('Data not saved.')    
-            event.app.exit()
-    @binding.add('c-x')
-    def _(event):
-        run_in_terminal(save)
                 
     print_welcome_message()
-    completer = WordCompleter(['add','remove','mark-as-done','mad','list-both','lb','list-todo','ltd','list done','ld','clear-todo','cltd','clear-done','cld','reset','report','save','help','clear','exit'], ignore_case=True)
+    commands = ['add','remove','mark-as-done','mad','list-both','lb','list-todo','ltd','list done','ld','clear-todo','cltd','clear-done','cld','reset','report','save','help','clear','exit']
+    completer = WordCompleter(commands  , ignore_case=True)
     stylesheet = Style.from_dict({
         'positive' : '#4CAF50',
-        'negative' : '#FF3333'
+        'negative' : '#FF3333',
+        'message'  : '#008080'
     })
     to_do_list = TaskManager()
     pyfile_path = os.path.dirname(os.path.realpath(__file__))
     json_data_file = os.path.join(pyfile_path, 'data.json')
     print(to_do_list.load_recent_state(json_data_file))
+    history_file=(FileHistory('.hist'))
     while True:
         try:
-            command = prompt(HTML("<b fg='#FFA500'><i>TaskMan > </i></b>"), completer=completer).strip()            
+            command = prompt(HTML("<b fg='#FFA500'><i>TaskMan > </i></b>"), completer=completer, history=history_file, auto_suggest=AutoSuggestFromHistory()).strip()            
             if not command:
                 print(HTML("<negative>Invalid option,the input cannot be blank,try 'help' to get more info on how to use this CLI.</negative>"), style=stylesheet)
 
@@ -100,13 +104,8 @@ def main():
                 print_help_message()
 
             elif command.lower() == 'exit':
-                save = confirm("Wanna save the current state: ",suffix="[y/N]" )
-                if save:
-                    print(to_do_list.save_current_state(json_data_file))
-                    break
-                else:
-                    print('Data not saved.')    
-                    break
+                save()
+                break
                 
             elif command.lower() == 'save':
                 print(to_do_list.save_current_state(json_data_file))
@@ -148,31 +147,23 @@ def main():
             elif command.lower().startswith('reset'):
                 print(to_do_list.reset())
             else:
-                print("Invalid option, try 'help' to get more info on how to use this CLI.")
+                print(HTML("<negative>Invalid option, try 'help' to get more info on how to use this CLI.</negative>"),style=stylesheet)
+
         except KeyboardInterrupt:
-            print("\nKeyboardInterrupt detected.Exiting... ")
-            save = confirm("Wanna save the current state: ", suffix="[y/N]")
-            if save:
-                print(to_do_list.save_current_state(json_data_file))
-                break
-            else:
-                print('Data not saved.')    
-                break
+            print(HTML("<negative>\nKeyboardInterrupt detected.Exiting... </negative>"),style=stylesheet)
+            save()
+            break   
             
         except EOFError:
-            print("\nEOF detected. Exiting...")
-            save = confirm("Wanna save the current state: ", suffix="[y/N]")
-            if save:
-                print(to_do_list.save_current_state(json_data_file))
-                break
-            else:
-                print('Data not saved.')    
-                break
+            print(HTML("<negative>\nEOF detected. Exiting...</negative>"), style=stylesheet)
+            save()
+            break
 
         except Exception as e:
-            print(f"An unexpected error occurred: {e}")
-            print("Please try again or type 'help' to see available commands or 'exit' to quit.")
+            print(HTML(f"<negative>An unexpected error occurred: {e}</negative>"), style=stylesheet)
+            print(HTML("<message>Please try again or type 'help' to see available commands or 'exit' to quit.</message>"),style=stylesheet)     
 
-    print("Thank you for using TaskManager CLI. Goodbye!")
+    print(HTML("<ansigreen>Thank you for using TaskManager CLI. Goodbye!</ansigreen>"))
+
 if __name__ == '__main__':
     main()
