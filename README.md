@@ -5,7 +5,7 @@
 [![TaskMan - Your Personal Task Manager](https://img.shields.io/badge/TaskMan-Your%20Personal%20Task%20Manager-blue?style=for-the-badge&logo=python&logoColor=white)](https://github.com/tahadnan/To-do-list-manager)
 
 [![PyPI version](https://badge.fury.io/py/ttask-manager.svg)](https://badge.fury.io/py/ttask-manager)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-  yellow.svg)](https://opensource.org/licenses/MIT)
 
 </div>
 
@@ -37,7 +37,7 @@ cd TaskMan-CLI
 ```bash
 pip install -r requirements.txt
 ```
-
+**(P.S: I'm using Linux, so some commands may differ slightly. Please take this into consideration.)**
 ## 🛠️ Usage
 
 1. After installation, you can start TaskMan CLI by running:
