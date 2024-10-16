@@ -10,8 +10,7 @@ from prompt_toolkit.keys import Keys
 from prompt_toolkit.application import run_in_terminal
 from prompt_toolkit.history import FileHistory  
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-from prompt_toolkit.lexers import Lexer
-from prompt_toolkit.document import Document
+
 def main():
     def print_welcome_message():
         print(HTML("""<ansiyellow>
@@ -36,47 +35,53 @@ def main():
 
     def print_help_message():
         print(HTML("""<ansiyellow>
-        ╔═══════════════════════════════════════════════════════════════════════════╗
-        ║                         TaskMan CLI Commands                              ║
-        ╠═══════════════════════════════════════════════════════════════════════════╣
-        ║ add [task1] | [task2] | ...    : Add one or more tasks                    ║
-        ║ remove [task1] | [task2] | ... : Remove one or more tasks                 ║
-        ║ mark-as-done / mad [task1]...  : Mark one or more tasks as completed      ║
-        ║ list-both / lb                 : Show all tasks (to-do and done)          ║
-        ║ list-todo / ltd                : Show pending tasks                       ║
-        ║ list-done / ld                 : Show completed tasks                     ║
-        ║ clear-todo / cltd              : Clear all pending tasks                  ║
-        ║ clear-done / cld               : Clear all completed tasks                ║
-        ║ reset                          : Clear all tasks (both to-do and done)    ║
-        ║ report [name]                  : Generate a report (optional custom name) ║
-        ║ save                           : Save current state to file               ║
-        ║ help                           : Show this help message                   ║
-        ║ clear / Ctrl+l                 : Clear the screen                         ║
-        ║ exit                           : Exit the program                         ║
-        ╠═══════════════════════════════════════════════════════════════════════════╣
-        ║ Note: Use '|' to separate multiple tasks in 'add', 'remove', or 'mad'     ║
-        ║                                  commands.                                ║
-        ╚═══════════════════════════════════════════════════════════════════════════╝
+        ╔════════════════════════════════════════════════════════════════════════════════╗
+        ║                              TaskMan CLI Commands                              ║
+        ╠════════════════════════════════════════════════════════════════════════════════╣
+        ║  add [task1] | [task2] | ...    : Add one or more tasks                        ║
+        ║    - Format: task:priority      : Add task with specific priority              ║
+        ║  remove [task1] | [task2] | ... : Remove one or more tasks                     ║
+        ║  mark-as-done / mad [task1]...  : Mark one or more tasks as completed          ║
+        ║  list-both / lb                 : Show all tasks (to-do and done)              ║
+        ║  list-todo / ltd                : Show pending tasks                           ║
+        ║  list-done / ld                 : Show completed tasks                         ║
+        ║  clear-todo / cltd              : Clear all pending tasks                      ║
+        ║  clear-done / cld               : Clear all completed tasks                    ║
+        ║  reset                          : Clear all tasks (both to-do and done)        ║
+        ║  report [name]                  : Generate a report (optional custom name)     ║
+        ║  save                           : Save current state to file                   ║
+        ║  help                           : Show this help message                       ║
+        ║  clear / Ctrl+l                 : Clear the screen                             ║
+        ║  exit                           : Exit the program                             ║
+        ╠════════════════════════════════════════════════════════════════════════════════╣
+        ║  Notes:                                                                        ║
+        ║  - Use '|' to separate multiple tasks in 'add', 'remove', or 'mad' commands.   ║
+        ║  - Tasks are automatically saved on exit and loaded on startup.                ║
+        ║  - Priority levels: high, medium, low (default: medium)                        ║
+        ╚════════════════════════════════════════════════════════════════════════════════╝
         </ansiyellow>
         """))
+
     def clear_screen():
-        # For Windows
+        #   For Windows
         if os.name == 'nt':
             _ = os.system('cls')
         # For Mac and Linux                 
         else:
             _ = os.system('clear')
+
     binding = KeyBindings()
     @binding.add('c-l')
     def _(event):
         clear_screen()
+
     def save():
         save = confirm(HTML("<ansicyan>Wanna save the current state: </ansicyan>"),suffix="[y/N]" )
         if save:
             print(to_do_list.save_current_state(json_data_file))
         else:
-            print('Data not saved.')    
-                
+            print('Data not saved.')
+
     print_welcome_message()
     commands = ['add','remove','mark-as-done','mad','list-both','lb','list-todo','ltd','list done','ld','clear-todo','cltd','clear-done','cld','reset','report','save','help','clear','exit']
     completer = WordCompleter(commands  , ignore_case=True)
@@ -88,7 +93,7 @@ def main():
     to_do_list = TaskManager()
     pyfile_path = os.path.dirname(os.path.realpath(__file__))
     json_data_file = os.path.join(pyfile_path, 'data.json')
-    print(to_do_list.load_recent_state(json_data_file))
+    print(to_do_list.load_state(json_data_file))
     history_file=(FileHistory('.hist'))
     while True:
         try:
@@ -111,9 +116,21 @@ def main():
                 print(to_do_list.save_current_state(json_data_file))
 
             elif command.lower().startswith('add'):
-                tasks = [task.strip() for task in command.split(maxsplit=1)[1].split('|') if task.strip()]
-                print(to_do_list.add_task(*tasks))
+                tasks_input = command.split(maxsplit=1)[1].split('|')
+                tasks = []
 
+                for task_str in tasks_input:
+                    task_str = task_str.strip()
+                    if not task_str:
+                        continue
+
+                    if ':' in task_str:
+                        task, priority = map(str.strip, task_str.split(':',1))
+                        tasks.append((task,priority))
+                    else:
+                        tasks.append(task_str)
+                print(to_do_list.add_task(*tasks))
+                
             elif command.lower().startswith('remove') :
                 tasks_tobe_removed = [task.strip() for task in command.split(maxsplit=1)[1].split('|') if task.strip()]
                 print(to_do_list.remove_task(*tasks_tobe_removed))
@@ -132,10 +149,10 @@ def main():
                 print(to_do_list.current_state('done'))
 
             elif command.lower().startswith('clear-todo') or command.lower().startswith('cltd'):
-                print(to_do_list.clear_todo_list())
+                print(to_do_list.clear('todo'))
 
             elif command.lower().startswith('clear-done') or command.lower().startswith('cld'):
-                print(to_do_list.clear_done_list())
+                print(to_do_list.clear('done'))
 
             elif command.lower().startswith('report'):
                 report_name = command[len('report'):].strip()
@@ -145,7 +162,7 @@ def main():
                     print(to_do_list.report(pyfile_path))
 
             elif command.lower().startswith('reset'):
-                print(to_do_list.reset())
+                print(to_do_list.clear('both'))
             else:
                 print(HTML("<negative>Invalid option, try 'help' to get more info on how to use this CLI.</negative>"),style=stylesheet)
 

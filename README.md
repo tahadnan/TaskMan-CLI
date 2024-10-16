@@ -5,7 +5,7 @@
 [![TaskMan - Your Personal Task Manager](https://img.shields.io/badge/TaskMan-Your%20Personal%20Task%20Manager-blue?style=for-the-badge&logo=python&logoColor=white)](https://github.com/tahadnan/To-do-list-manager)
 
 [![PyPI version](https://badge.fury.io/py/ttask-manager.svg)](https://badge.fury.io/py/ttask-manager)
-[![License: MIT](https://img.shields.io/badge/License-MIT-  yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 </div>
 
@@ -15,14 +15,15 @@ TaskMan CLI is a powerful and user-friendly task management application built wi
 
 ## ✨ Features
 
-- 📌 **Add Tasks**: Easily add new tasks to your to-do list
+- 📌 **Add Tasks**: Easily add new tasks to your to-do list with optional priority levels
 - 🗑️ **Remove Tasks**: Remove tasks from your to-do list
 - ✅ **Mark Tasks as Completed**: Move tasks to a "done" list when completed
 - 👀 **View Current State**: See all your tasks, both pending and completed
 - 🧹 **Clear Lists**: Clean up your to-do and done lists with a single command
-- 💾 **Data Persistence**: Your tasks are saved automatically, so you never lose your progress
+- 💾 **Save on Exit**: Option to save your tasks when exiting the application
+- 🔄 **Load on Start**: Your previously saved tasks are automatically loaded when you start the application
 - 📊 **Generate Reports**: Create daily task reports to track your productivity
-
+- 🔢 **Priority Levels**: Assign priority levels (high, medium, low) to your tasks
 
 ## 🚀 Installation
 
@@ -33,11 +34,12 @@ TaskMan CLI is a powerful and user-friendly task management application built wi
 git clone https://github.com/tahadnan/TaskMan-CLI.git
 cd TaskMan-CLI
 ```
-3. Install required libraries(It's better to use a [Virtual Environement](https://realpython.com/python-virtual-environments-a-primer/):
+3. Install required libraries (It's better to use a [Virtual Environment](https://realpython.com/python-virtual-environments-a-primer/)):
 ```bash
 pip install -r requirements.txt
 ```
 **(P.S: I'm using Linux, so some commands may differ slightly. Please take this into consideration.)**
+
 ## 🛠️ Usage
 
 1. After installation, you can start TaskMan CLI by running:
@@ -55,7 +57,7 @@ TaskMan > help
 3. Use the various commands to manage your tasks. Here are some examples:
 
 ```
-TaskMan > add Buy groceries | Call mom | Finish report
+TaskMan > add Buy groceries:high | Call mom | Finish report:low
 TaskMan > list-todo
 TaskMan > mark-as-done Buy groceries
 TaskMan > list-both
@@ -64,6 +66,7 @@ TaskMan > list-both
 ## 📚 Available Commands
 
 - `add [task1] | [task2] | ...`: Add one or more tasks
+  - Format: task:priority (e.g., "Buy groceries:high")
 - `remove [task1] | [task2] | ...`: Remove one or more tasks
 - `mark-as-done / mad [task1]...`: Mark one or more tasks as completed
 - `list-both / lb`: Show all tasks (to-do and done)
@@ -73,16 +76,18 @@ TaskMan > list-both
 - `clear-done / cld`: Clear all completed tasks
 - `reset`: Clear all tasks (both to-do and done)
 - `report [name]`: Generate a report (optional custom name)
-- `save`: Save current state to file
+- `save`: Manually save current state to file
 - `help`: Show the help message
 - `clear / Ctrl+l`: Clear the screen
-- `exit`: Exit the program
+- `exit`: Exit the program (prompts to save tasks)
 
 ## 💡 Tips
 
 - Use the up and down arrow keys to navigate through your command history.
 - TaskMan supports auto-completion. Start typing a command and press Tab to complete it.
-- Your tasks can be saved, so you can safely exit and resume your work later.
+- When exiting, you'll be prompted to save your tasks. This ensures you don't lose any changes.
+- Your saved tasks are automatically loaded when you start the application.
+- You can assign priorities to tasks: high, medium (default), or low.
 
 ## 🤝 Contributing
 
