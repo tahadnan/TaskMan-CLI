@@ -9,6 +9,12 @@
 
 </div>
 
+## 🗃️ Archival Notice
+
+This repository has been archived. Original Taskman-CLI was in a separate repository than the Taskman-CLI-PyPi package, just as an exercise to get comfortable with packaging. I have gotten enough experience now and will be working exclusively on the Taskman-CLI-PyPi repository. As such this repository won't be updated anymore and any further development will take place in the repository Taskman-CLI-PyPi.
+
+You are welcome to check the [Taskman-CLI-PyPi](https://github.com/tahadnan/TaskMan-CLI-PyPi) repository for further improvements and releases.
+
 ## 📝 Description
 
 TaskMan CLI is a powerful and user-friendly task management application built with Python. It offers a seamless command-line interface for efficiently managing your daily tasks, helping you boost productivity and stay organized.
